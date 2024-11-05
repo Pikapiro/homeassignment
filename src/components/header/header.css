@@ -1,0 +1,45 @@
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: white;
+   padding:10px 70px  ;
+}
+.logoAndSearchDiv{
+    display: flex;
+    align-items: center;
+}
+.searchInput{
+   
+    padding: 0 20px;
+    border: 1px solid rgba(244, 245, 245, 1);
+    border-radius: 250px;
+    height: 40px;
+    background-color: rgba(244, 245, 245, 1);
+}
+.logo {
+    margin-right: 16px;
+}
+.pic{
+    border-radius: 50%;
+}
+.searchBar {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+   
+    padding: 8px;
+}
+.searchButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+.userActions {
+    display: flex;
+    align-items: center;
+}

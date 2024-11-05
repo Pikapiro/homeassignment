@@ -1,0 +1,88 @@
+
+
+.post {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.usrInfo {
+    display: flex;
+ 
+    margin-bottom: 12px;
+    flex-direction: row;
+}
+.spanDiv{
+    display: flex;
+  
+    margin-bottom: 12px;
+    flex-direction: column;
+}
+.buttonsDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 12px;
+    border-top:1px solid #777;
+}
+.Btn.liked {
+    color: #007bff;
+
+}
+
+.Btn:hover {
+    color: #0056b3;
+   
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.username {
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.shopName {
+    font-style: italic;
+    color: #555;
+}
+
+.postContent {
+    margin-bottom: 12px;
+}
+
+.postContent p {
+    margin: 0 0 12px;
+}
+
+.postImage {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.postDetails {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #777;
+    flex-direction: column;
+}
+.postNumbers{
+    display: flex;
+    justify-content: space-between;
+ 
+}
+
+.postDetails span {
+    margin-right: 16px;
+}

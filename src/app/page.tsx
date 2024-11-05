@@ -1,95 +1,85 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import Post from "@/components/singlePost/Post";
+import React, { useEffect, useState, useCallback } from "react";
+import "./pag.css";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    interface FeedItem {
+        id: string;
+        userId: string;
+        username: string;
+        avatar: string;
+        shopName: string;
+        shopId: string;
+        images: string[];
+        comments: number;
+        date: string;
+        text: string;
+        likes: number;
+        didLike: boolean;
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    }
+
+    const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
+    const [skip, setSkip] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const API_URL = "https://backend.tedooo.com/hw/feed.json";
+
+    let throttleTimeout: NodeJS.Timeout;
+
+    const fetchFeedData = useCallback(async () => {
+        if (!hasMore || isLoading) return;
+        setIsLoading(true);
+
+        try {
+            const response = await fetch(`${API_URL}?skip=${skip}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (data && Array.isArray(data.data)) {
+                setFeedItems((prevItems) => [...prevItems, ...data.data]);
+                setSkip((prevSkip) => prevSkip + data.data.length);
+                setHasMore(data.hasMore);
+            } else {
+                console.error("Unexpected data format:", data);
+            }
+        } catch (error) {
+            console.error("Error fetching feed data:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [skip, hasMore, isLoading]);
+
+    useEffect(() => {
+        fetchFeedData();
+    }, []);
+
+    useEffect(() => {
+        const throttledScroll = () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                clearTimeout(throttleTimeout);
+                throttleTimeout = setTimeout(fetchFeedData, 200);
+            }
+        };
+
+        window.addEventListener("scroll", throttledScroll);
+        return () => {
+            clearTimeout(throttleTimeout);
+            window.removeEventListener("scroll", throttledScroll);
+        };
+    }, [fetchFeedData]);
+
+
+
+    return (
+        <div id="feed-container">
+            {feedItems.map((item) => (
+                <Post key={item.id} {...item} data-itemid={item.id} className="feed-item" />
+            ))}
+            {isLoading && <div className="loader">Loading...</div>}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
